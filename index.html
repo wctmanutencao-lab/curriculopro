@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Currículo Profissional 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Montserrat:wght@300;400;600;700;900&family=DM+Sans:wght@300;400;500;700&family=Bebas+Neue&family=Fraunces:ital,wght@0,300;0,700;1,300&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;font-family:'DM Sans',sans-serif;min-height:100vh;color:#e0e0e0}
+
+/* SENHA */
+#owner-screen{position:fixed;inset:0;background:#0a0a0a;z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;font-family:'Montserrat',sans-serif}
+#owner-screen h2{color:#d4a843;font-size:19px;font-weight:900}
+#owner-screen p{color:#555;font-size:11px;text-align:center;max-width:260px;line-height:1.7}
+#owner-screen input{background:#181818;border:1.5px solid #2a2a2a;border-radius:6px;color:#fff;padding:10px 16px;font-size:15px;font-family:'Montserrat',sans-serif;width:220px;text-align:center;outline:none;letter-spacing:4px}
+#owner-screen input:focus{border-color:#d4a843}
+.o-btn{background:#d4a843;color:#111;border:none;border-radius:6px;padding:10px 26px;font-size:11px;font-weight:900;font-family:'Montserrat',sans-serif;cursor:pointer;letter-spacing:1px}
+.o-btn:hover{background:#f0c060}
+#owner-err{color:#e74c3c;font-size:11px;min-height:14px}
+#owner-skip{color:#333;font-size:10px;cursor:pointer;text-decoration:underline}
+
+/* TOOLBAR */
+#toolbar{position:fixed;top:0;left:0;right:0;z-index:9000;background:#0f0f0f;border-bottom:1px solid #1e1e1e;display:flex;align-items:center;flex-wrap:wrap;gap:5px;padding:7px 14px;font-family:'Montserrat',sans-serif}
+.tb-label{color:#444;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
+.tb-sep{width:1px;height:24px;background:#1e1e1e;margin:0 3px;flex-shrink:0}
+.btn{padding:5px 12px;border:none;border-radius:4px;cursor:pointer;font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;transition:all .15s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.btn-edit{background:#1e1e1e;color:#d4a843;border:1px solid #2a2a2a}
+.btn-edit:hover,.btn-edit.active{background:#d4a843;color:#111}
+.btn-pdf{background:#c0392b;color:#fff}.btn-pdf:hover{background:#e74c3c}
+.btn-add{background:#0d2d45;color:#5bc0f8;border:1px solid #1a4a6a;font-size:10px}.btn-add:hover{background:#1a4a6a}
+.btn-cancel{background:#1e1e1e;color:#e74c3c;border:1px solid #2a2a2a}.btn-cancel:hover{background:#e74c3c;color:#fff}
+.btn-ok{background:#27ae60;color:#fff}.btn-ok:hover{background:#2ecc71}
+.mtabs{display:flex;gap:3px;align-items:center;flex-wrap:wrap}
+.mtab{padding:4px 10px;border-radius:4px;cursor:pointer;font-size:9px;font-weight:700;font-family:'Montserrat',sans-serif;border:1.5px solid #1e1e1e;color:#444;transition:all .2s;white-space:nowrap;background:#0f0f0f;letter-spacing:.5px}
+.mtab:hover{border-color:#444;color:#888}
+.mtab.active{border-color:#d4a843;color:#d4a843;background:#130f00}
+#edit-badge{display:none;background:#d4a843;color:#111;font-size:9px;font-weight:900;padding:2px 7px;border-radius:20px;animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* WRAPPER */
+#page-wrapper{padding:68px 0 60px;display:flex;justify-content:center}
+.cv-page{width:794px;position:relative;overflow:hidden;box-shadow:0 16px 80px rgba(0,0,0,.8);display:none}
+.cv-page.active-model{display:flex}
+
+/* COMUNS */
+.name-lock{display:none;font-size:11px;opacity:.45;margin-left:5px;cursor:default}
+body.editing .name-lock{display:inline}
+[contenteditable="true"]{outline:1px dashed rgba(212,168,67,.45);border-radius:2px;cursor:text;min-width:18px;min-height:13px}
+[contenteditable="true"]:focus{outline:2px solid #d4a843;background:rgba(212,168,67,.06)}
+.add-btns{display:none;flex-wrap:wrap;gap:5px;margin-top:7px}
+body.editing .add-btns{display:flex!important}
+.rm-btn{position:absolute;background:none;border:none;cursor:pointer;font-size:13px;color:#bbb;transition:color .2s;display:none}
+.rm-btn:hover{color:#e74c3c}
+body.editing .rm-btn{display:block}
+
+/* FOTO PLACEHOLDER — sempre visível para cliente, some só no print se sem foto */
+.foto-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;pointer-events:none;transition:opacity .2s}
+.foto-placeholder .fp-icon{font-size:22px;opacity:.5}
+.foto-placeholder .fp-txt{font-size:9px;font-weight:700;opacity:.4;letter-spacing:.5px;text-align:center;font-family:'Montserrat',sans-serif}
+.foto-placeholder .fp-sub{font-size:8px;opacity:.25;text-align:center;font-family:'Montserrat',sans-serif}
+/* Quando tem foto, esconde placeholder e mostra overlay de edição ao hover */
+[data-has-photo] .foto-placeholder{display:none}
+[data-has-photo] .po,.foto-pw:hover .po,[data-has-photo] .po2,[data-has-photo] .po3,[data-has-photo] .po4,[data-has-photo] .po5{pointer-events:auto}
+/* No print, esconde placeholder e container sem foto */
+@media print{
+  .foto-placeholder{display:none!important}
+  [data-no-photo="1"]{display:none!important}
+}
+
+/* ── M1: CLÁSSICO DARK ── */
+#cv1{flex-direction:row;background:#fff;min-height:1060px;font-family:'Montserrat',sans-serif}
+#cv1 .L{width:255px;flex-shrink:0;background:#111;display:flex;flex-direction:column;align-items:center}
+#cv1 .pw{width:100%;height:255px;overflow:hidden;position:relative;cursor:pointer;flex-shrink:0}
+#cv1 .pw img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+#cv1 .po{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;pointer-events:none}
+#cv1 [data-has-photo]:hover .po{opacity:1;pointer-events:auto}
+#cv1 .pw:hover .po{opacity:1}
+#cv1 .po span{color:#fff;font-size:11px;font-weight:700;margin-top:5px}
+#cv1 .ls{width:100%;padding:15px 17px 12px;border-top:1px solid #1d1d1d}
+#cv1 .lt{font-size:9px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;color:#d4a843;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+#cv1 .lt::after{content:'';flex:1;height:1px;background:#222}
+#cv1 .ci{display:flex;align-items:flex-start;gap:7px;margin-bottom:8px}
+#cv1 .cii{width:24px;height:24px;border:1.5px solid #d4a843;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px}
+#cv1 .cit{font-size:10.5px;color:#aaa;word-break:break-all;line-height:1.5;padding-top:2px;flex:1}
+#cv1 .cit a{color:#d4a843;text-decoration:none}
+#cv1 .aci{margin-bottom:10px;position:relative;padding-right:14px}
+#cv1 .acc{font-size:10.5px;font-weight:700;color:#fff;line-height:1.4}
+#cv1 .acs{font-size:10px;color:#d4a843;margin-top:1px}
+#cv1 .acy{font-size:9.5px;color:#555;margin-top:1px}
+#cv1 .skw{margin-bottom:7px}
+#cv1 .skn{font-size:10px;color:#bbb;margin-bottom:3px}
+#cv1 .skb{height:3px;background:#222;border-radius:2px;overflow:hidden}
+#cv1 .skf{height:100%;background:linear-gradient(90deg,#d4a843,#f0c060);border-radius:2px}
+#cv1 .deco{margin-top:auto;padding:12px 0;text-align:center;font-size:26px;opacity:.06;letter-spacing:6px;user-select:none}
+#cv1 .R{flex:1;display:flex;flex-direction:column}
+#cv1 .ch{background:#111;color:#fff;padding:28px 26px 20px;position:relative;overflow:hidden}
+#cv1 .chd{position:absolute;right:-10px;top:-20px;font-size:120px;opacity:.04;transform:rotate(8deg);user-select:none}
+#cv1 .cn{font-size:24px;font-weight:900;letter-spacing:.3px;position:relative;z-index:1;line-height:1.2}
+#cv1 .cr{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#d4a843;margin-top:6px;position:relative;z-index:1}
+#cv1 .ct{padding:16px 22px 24px;flex:1}
+#cv1 .st{font-size:9px;font-weight:900;color:#111;text-transform:uppercase;letter-spacing:2px;margin-top:16px;margin-bottom:9px;border-bottom:2px solid #111;padding-bottom:3px}
+#cv1 .st:first-child{margin-top:0}
+#cv1 .obj{font-size:11px;color:#444;line-height:1.75;background:#f8f8f8;border-left:3px solid #d4a843;padding:9px 13px;border-radius:0 4px 4px 0}
+#cv1 .job{padding:8px 0 8px 12px;border-left:3px solid #111;margin-bottom:8px;position:relative}
+#cv1 .job::before{content:'';position:absolute;left:-5px;top:11px;width:7px;height:7px;background:#d4a843;border-radius:50%}
+#cv1 .jco{font-size:11px;font-weight:900;color:#111;text-transform:uppercase;letter-spacing:.2px}
+#cv1 .jro{font-size:10.5px;font-weight:600;color:#555;margin-top:2px}
+#cv1 .jpe{font-size:10px;color:#999;margin-top:1px}
+#cv1 .prj{border-left:3px solid #d4a843;padding:8px 0 8px 12px;margin-bottom:8px;position:relative}
+#cv1 .pjn{font-size:11px;font-weight:900;color:#111;text-transform:uppercase;letter-spacing:.2px}
+#cv1 .pjd{font-size:10.5px;color:#555;margin-top:2px;line-height:1.5}
+#cv1 .pjl a{font-size:10px;color:#d4a843;text-decoration:none}
+
+/* ── M2: EDITORIAL ── */
+#cv2{flex-direction:column;background:#f5f0eb;min-height:1060px;font-family:'Fraunces',serif}
+#cv2 .top{background:#1a1209;padding:34px 42px 28px;position:relative;overflow:hidden;display:flex;gap:30px;align-items:flex-end}
+#cv2 .top::before{content:'';position:absolute;right:0;top:0;bottom:0;width:260px;background:linear-gradient(135deg,transparent 50%,#d4a843 50%);opacity:.1}
+#cv2 .pw2{width:90px;height:90px;border-radius:8px;overflow:hidden;border:2px solid #d4a843;flex-shrink:0;cursor:pointer;position:relative}
+#cv2 .pw2 img{width:100%;height:100%;object-fit:cover;display:block}
+#cv2 .po2{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;pointer-events:none}
+#cv2 [data-has-photo]:hover .po2{opacity:1;pointer-events:auto}
+#cv2 .po2 span{color:#fff;font-size:10px;font-family:'Montserrat',sans-serif;font-weight:700}
+#cv2 .hi{flex:1;position:relative;z-index:1}
+#cv2 .cn2{font-family:'Fraunces',serif;font-size:34px;font-weight:700;color:#fff;line-height:1;letter-spacing:-.5px}
+#cv2 .cr2{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#d4a843;margin-top:7px}
+#cv2 .cc2{display:flex;flex-wrap:wrap;gap:7px 18px;margin-top:11px}
+#cv2 .cci{display:flex;align-items:center;gap:5px;font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.5)}
+#cv2 .cci .ic{color:#d4a843}
+#cv2 .body2{display:flex;flex:1}
+#cv2 .main2{flex:1;padding:22px 26px 26px;border-right:1px solid #e0d9cf}
+#cv2 .side2{width:205px;padding:20px 20px 22px;background:#ede8e1;flex-shrink:0}
+#cv2 .st2m{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#1a1209;margin-bottom:9px;margin-top:18px;border-bottom:2px solid #1a1209;padding-bottom:3px}
+#cv2 .st2m:first-child{margin-top:0}
+#cv2 .obj2{font-size:12px;color:#555;line-height:1.8;font-style:italic}
+#cv2 .jb2{margin-bottom:13px;padding-bottom:13px;border-bottom:1px solid #ddd6cb;position:relative}
+#cv2 .jb2:last-child{border-bottom:none}
+#cv2 .jh2{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+#cv2 .jco2{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:#1a1209}
+#cv2 .jpe2{font-family:'Montserrat',sans-serif;font-size:9px;color:#fff;background:#1a1209;padding:2px 7px;border-radius:10px;flex-shrink:0}
+#cv2 .jro2{font-size:11px;color:#d4a843;font-weight:300;margin-top:2px;font-style:italic}
+#cv2 .pr2{margin-bottom:12px;padding-left:13px;border-left:2px solid #d4a843;position:relative}
+#cv2 .pn2{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:#1a1209}
+#cv2 .pd2{font-size:11px;color:#666;margin-top:2px;line-height:1.5}
+#cv2 .pl2 a{font-size:10px;color:#d4a843;text-decoration:none}
+#cv2 .st2s{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#1a1209;margin-bottom:8px;margin-top:16px;border-bottom:1px solid #ccc5ba;padding-bottom:3px}
+#cv2 .st2s:first-child{margin-top:0}
+#cv2 .ac2{margin-bottom:10px;position:relative;padding-right:13px}
+#cv2 .acc2{font-family:'Montserrat',sans-serif;font-size:10.5px;font-weight:700;color:#1a1209;line-height:1.4}
+#cv2 .acs2{font-size:10px;color:#d4a843;margin-top:1px;font-style:italic}
+#cv2 .acy2{font-family:'Montserrat',sans-serif;font-size:9.5px;color:#999;margin-top:1px}
+#cv2 .sk2{margin-bottom:7px}
+#cv2 .skn2{font-family:'Montserrat',sans-serif;font-size:10px;color:#555;margin-bottom:3px}
+#cv2 .skb2{height:4px;background:#d5cec5;border-radius:2px;overflow:hidden}
+#cv2 .skf2{height:100%;background:linear-gradient(90deg,#1a1209,#d4a843);border-radius:2px}
+
+/* ── M3: MINIMALISTA CLEAN ── */
+#cv3{flex-direction:column;background:#fff;min-height:1060px;font-family:'DM Sans',sans-serif}
+#cv3 .top3{background:#fff;padding:44px 52px 30px;border-bottom:1px solid #e8e8e8;display:flex;align-items:center;gap:36px}
+#cv3 .pw3{width:96px;height:96px;border-radius:50%;overflow:hidden;flex-shrink:0;cursor:pointer;position:relative;border:1px solid #e0e0e0}
+#cv3 .pw3 img{width:100%;height:100%;object-fit:cover;display:block}
+#cv3 .po3{position:absolute;inset:0;background:rgba(0,0,0,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;pointer-events:none}
+#cv3 [data-has-photo]:hover .po3{opacity:1;pointer-events:auto}
+#cv3 .po3 span{color:#fff;font-size:10px;font-weight:600}
+#cv3 .hi3{flex:1}
+#cv3 .cn3{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:#111;letter-spacing:-.5px;line-height:1.1}
+#cv3 .cr3{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#aaa;margin-top:7px}
+#cv3 .cc3{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:10px}
+#cv3 .cci3{font-size:10px;color:#888;display:flex;align-items:center;gap:4px}
+#cv3 .body3{display:flex;flex:1}
+#cv3 .main3{flex:1;padding:28px 36px 32px;border-right:1px solid #f0f0f0}
+#cv3 .side3{width:200px;padding:26px 22px;flex-shrink:0;background:#fafafa}
+#cv3 .st3m{font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#bbb;margin-bottom:10px;margin-top:20px}
+#cv3 .st3m:first-child{margin-top:0}
+#cv3 .st3m-line{width:24px;height:1px;background:#111;margin-bottom:10px;margin-top:-7px}
+#cv3 .obj3{font-size:11.5px;color:#666;line-height:1.85}
+#cv3 .jb3{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #f0f0f0;position:relative}
+#cv3 .jb3:last-child{border-bottom:none}
+#cv3 .jco3{font-size:12px;font-weight:700;color:#111}
+#cv3 .jro3{font-size:11px;color:#888;margin-top:2px;font-style:italic}
+#cv3 .jpe3{font-size:9.5px;color:#bbb;margin-top:2px}
+#cv3 .pr3{margin-bottom:12px;padding:10px 14px;border-left:2px solid #e0e0e0;position:relative}
+#cv3 .pn3{font-size:11px;font-weight:700;color:#111}
+#cv3 .pd3{font-size:10.5px;color:#888;margin-top:2px;line-height:1.5}
+#cv3 .pl3 a{font-size:10px;color:#aaa;text-decoration:none}
+#cv3 .st3s{font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#bbb;margin-bottom:8px;margin-top:18px}
+#cv3 .st3s:first-child{margin-top:0}
+#cv3 .ac3{margin-bottom:11px;position:relative;padding-right:13px}
+#cv3 .acc3{font-size:10.5px;font-weight:700;color:#111;line-height:1.4}
+#cv3 .acs3{font-size:10px;color:#aaa;margin-top:1px}
+#cv3 .acy3{font-size:9.5px;color:#ccc;margin-top:1px}
+#cv3 .sk3{margin-bottom:8px}
+#cv3 .skn3{font-size:10px;color:#888;margin-bottom:3px}
+#cv3 .skb3{height:2px;background:#ebebeb;border-radius:1px;overflow:hidden}
+#cv3 .skf3{height:100%;background:#111;border-radius:1px}
+
+/* ── M4: ELEGANT SERIF ── */
+#cv4{flex-direction:column;background:#fdf8f3;min-height:1060px;font-family:'Playfair Display',serif}
+#cv4 .top4{background:#2b1d0e;padding:36px 46px 30px;display:flex;align-items:center;gap:34px;position:relative;overflow:hidden}
+#cv4 .top4::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:3px;background:linear-gradient(90deg,#c9a84c,#f0d080,#c9a84c)}
+#cv4 .pw4{width:98px;height:98px;border-radius:50%;overflow:hidden;border:2px solid #c9a84c;flex-shrink:0;cursor:pointer;position:relative}
+#cv4 .pw4 img{width:100%;height:100%;object-fit:cover;display:block}
+#cv4 .po4{position:absolute;inset:0;background:rgba(0,0,0,.5);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;pointer-events:none}
+#cv4 [data-has-photo]:hover .po4{opacity:1;pointer-events:auto}
+#cv4 .po4 span{color:#fff;font-size:10px;font-family:'Montserrat',sans-serif;font-weight:700}
+#cv4 .hi4{flex:1}
+#cv4 .cn4{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:#fff;letter-spacing:-.3px;line-height:1.1}
+#cv4 .cr4{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:600;letter-spacing:3.5px;text-transform:uppercase;color:#c9a84c;margin-top:7px}
+#cv4 .cc4{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:11px}
+#cv4 .cci4{font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:5px}
+#cv4 .cci4 .ic{color:#c9a84c}
+#cv4 .body4{display:flex;flex:1}
+#cv4 .main4{flex:1;padding:24px 30px 28px}
+#cv4 .side4{width:210px;background:#f4ede4;border-left:1px solid #e8ddd0;padding:20px 19px;flex-shrink:0}
+#cv4 .st4m{font-family:'Montserrat',sans-serif;font-size:8.5px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;color:#2b1d0e;margin-bottom:9px;margin-top:18px;position:relative;padding-left:12px}
+#cv4 .st4m:first-child{margin-top:0}
+#cv4 .st4m::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:4px;height:13px;background:#c9a84c}
+#cv4 .obj4{font-size:12px;color:#5a4535;line-height:1.85;font-style:italic}
+#cv4 .jb4{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #e8ddd0;position:relative}
+#cv4 .jb4:last-child{border-bottom:none}
+#cv4 .jco4{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:#2b1d0e}
+#cv4 .jro4{font-size:12px;color:#c9a84c;margin-top:2px;font-style:italic}
+#cv4 .jpe4{font-family:'Montserrat',sans-serif;font-size:9.5px;color:#999;margin-top:2px}
+#cv4 .pr4{margin-bottom:12px;padding:9px 13px;background:#fff;border:1px solid #e8ddd0;border-radius:4px;position:relative}
+#cv4 .pn4{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:#2b1d0e}
+#cv4 .pd4{font-size:11px;color:#666;margin-top:3px;line-height:1.55}
+#cv4 .pl4 a{font-size:10px;color:#c9a84c;text-decoration:none}
+#cv4 .st4s{font-family:'Montserrat',sans-serif;font-size:8.5px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#2b1d0e;margin-bottom:8px;margin-top:15px;border-bottom:1px solid #ddd0c0;padding-bottom:3px}
+#cv4 .st4s:first-child{margin-top:0}
+#cv4 .ac4{margin-bottom:10px;position:relative;padding-right:12px}
+#cv4 .acc4{font-family:'Montserrat',sans-serif;font-size:10.5px;font-weight:700;color:#2b1d0e;line-height:1.4}
+#cv4 .acs4{font-size:10.5px;color:#c9a84c;margin-top:1px;font-style:italic}
+#cv4 .acy4{font-family:'Montserrat',sans-serif;font-size:9.5px;color:#aaa;margin-top:1px}
+#cv4 .sk4{margin-bottom:7px}
+#cv4 .skn4{font-family:'Montserrat',sans-serif;font-size:10px;color:#5a4535;margin-bottom:3px}
+#cv4 .skb4{height:4px;background:#e8ddd0;border-radius:2px;overflow:hidden}
+#cv4 .skf4{height:100%;background:linear-gradient(90deg,#2b1d0e,#c9a84c);border-radius:2px}
+
+/* ── M5: ART DÉCO LUXO ── */
+#cv5{flex-direction:column;background:#0c0a06;min-height:1060px;font-family:'Montserrat',sans-serif}
+#cv5 .top5{background:#0c0a06;padding:36px 46px 28px;display:flex;align-items:center;gap:32px;position:relative;border-bottom:1px solid #1e1a0e}
+#cv5 .top5::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#c9a84c 20%,#f0d080 50%,#c9a84c 80%,transparent)}
+#cv5 .top5::after{content:'';position:absolute;bottom:0;left:46px;right:46px;height:1px;background:linear-gradient(90deg,transparent,#c9a84c,transparent)}
+#cv5 .pw5{width:100px;height:100px;border-radius:50%;overflow:hidden;flex-shrink:0;cursor:pointer;position:relative;border:1px solid #c9a84c;box-shadow:0 0 0 3px #0c0a06,0 0 0 4px #c9a84c33}
+#cv5 .pw5 img{width:100%;height:100%;object-fit:cover;display:block}
+#cv5 .po5{position:absolute;inset:0;background:rgba(0,0,0,.55);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;pointer-events:none}
+#cv5 [data-has-photo]:hover .po5{opacity:1;pointer-events:auto}
+#cv5 .pw5:hover .po5{opacity:1}
+#cv5 .po5 span{color:#c9a84c;font-size:10px;font-weight:700}
+#cv5 .hi5{flex:1;position:relative;z-index:1}
+#cv5 .cn5{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:#e8d5a0;letter-spacing:1px;line-height:1.1}
+#cv5 .cr5{font-size:8.5px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#c9a84c;margin-top:8px;opacity:.9}
+#cv5 .cc5{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:10px}
+#cv5 .cci5{font-size:10px;color:#5a5030;display:flex;align-items:center;gap:5px}
+#cv5 .cci5 .ic{color:#c9a84c}
+#cv5 .deco5-top{text-align:center;font-size:13px;letter-spacing:8px;color:#c9a84c;opacity:.35;padding:6px 0 0;user-select:none}
+#cv5 .body5{display:flex;flex:1}
+#cv5 .main5{flex:1;padding:24px 34px 28px}
+#cv5 .side5{width:205px;padding:22px 18px;background:#080706;border-left:1px solid #1e1a0e;flex-shrink:0}
+#cv5 .st5m{font-size:8px;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;color:#c9a84c;margin-bottom:5px;margin-top:20px}
+#cv5 .st5m:first-child{margin-top:0}
+#cv5 .st5m-orn{text-align:center;font-size:10px;color:#c9a84c;opacity:.4;letter-spacing:4px;margin-bottom:9px;user-select:none}
+#cv5 .obj5{font-family:'Fraunces',serif;font-size:11.5px;color:#6a5e3a;line-height:1.85;font-style:italic}
+#cv5 .jb5{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #1a160a;position:relative}
+#cv5 .jb5:last-child{border-bottom:none}
+#cv5 .jco5{font-size:11.5px;font-weight:700;color:#e8d5a0;letter-spacing:.5px}
+#cv5 .jro5{font-size:11px;color:#c9a84c;margin-top:2px;font-style:italic;font-family:'Fraunces',serif}
+#cv5 .jpe5{font-size:9.5px;color:#3a3020;margin-top:2px}
+#cv5 .pr5{margin-bottom:12px;padding:9px 13px;border:1px solid #1e1a0e;background:#0e0c07;position:relative}
+#cv5 .pr5::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,#c9a84c,#f0d080,#c9a84c)}
+#cv5 .pn5{font-size:11px;font-weight:700;color:#e8d5a0;letter-spacing:.3px}
+#cv5 .pd5{font-size:10.5px;color:#4a4028;margin-top:2px;line-height:1.5}
+#cv5 .pl5 a{font-size:10px;color:#c9a84c;text-decoration:none}
+#cv5 .st5s{font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#c9a84c;margin-bottom:8px;margin-top:16px}
+#cv5 .st5s:first-child{margin-top:0}
+#cv5 .ac5{margin-bottom:11px;position:relative;padding-right:13px}
+#cv5 .acc5{font-size:10.5px;font-weight:700;color:#e8d5a0;line-height:1.4}
+#cv5 .acs5{font-size:10px;color:#c9a84c;margin-top:1px;font-style:italic;font-family:'Fraunces',serif}
+#cv5 .acy5{font-size:9.5px;color:#3a3020;margin-top:1px}
+#cv5 .sk5{margin-bottom:8px}
+#cv5 .skn5{font-size:10px;color:#6a5e3a;margin-bottom:3px}
+#cv5 .skb5{height:2px;background:#1a160a;border-radius:1px;overflow:hidden}
+#cv5 .skf5{height:100%;background:linear-gradient(90deg,#c9a84c,#f0d080);border-radius:1px}
+#cv5 .deco5{padding:10px 0;text-align:center;font-size:11px;letter-spacing:6px;color:#c9a84c;opacity:.18;user-select:none}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:99998;display:flex;align-items:center;justify-content:center}
+.modal{background:#141414;border:1px solid #222;border-radius:10px;padding:24px 26px;width:390px;max-width:95vw;color:#ddd;font-family:'Montserrat',sans-serif}
+.modal h3{font-size:13px;font-weight:900;margin-bottom:13px;color:#d4a843}
+.modal label{display:block;font-size:9px;color:#555;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;margin-top:9px}
+.modal input,.modal textarea{width:100%;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:4px;color:#ddd;padding:7px 10px;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;transition:border .2s}
+.modal input:focus,.modal textarea:focus{border-color:#d4a843}
+.modal textarea{resize:vertical;min-height:55px}
+.modal-btns{display:flex;gap:7px;margin-top:13px;justify-content:flex-end}
+
+/* PAGAMENTO */
+#pay-bg{position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:99999;display:none;align-items:center;justify-content:center}
+#pay-box{background:#111;border:1px solid #222;border-radius:14px;padding:26px 28px;width:430px;max-width:95vw;font-family:'Montserrat',sans-serif;text-align:center;position:relative;max-height:92vh;overflow-y:auto}
+.pm-close{position:absolute;top:12px;right:14px;background:none;border:none;color:#333;cursor:pointer;font-size:18px;font-weight:700;transition:color .2s}
+.pm-close:hover{color:#888}
+.pm-icon{font-size:32px;margin-bottom:8px}
+#pay-box h2{color:#fff;font-size:17px;font-weight:900;margin-bottom:4px}
+.pm-sub{color:#555;font-size:11px;line-height:1.7;margin-bottom:14px}
+.pm-vals{display:flex;gap:7px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
+.pm-vbtn{padding:9px 15px;border-radius:7px;cursor:pointer;font-size:14px;font-weight:900;font-family:'Montserrat',sans-serif;border:2px solid #222;background:#161616;color:#666;transition:all .2s}
+.pm-vbtn:hover,.pm-vbtn.sel{border-color:#d4a843;color:#d4a843;background:#130f00}
+.pm-cw{display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:5px}
+.pm-cw label{color:#555;font-size:10px;white-space:nowrap}
+.pm-cw input{background:#161616;border:1px solid #2a2a2a;border-radius:6px;color:#fff;padding:7px 12px;font-size:13px;font-weight:700;font-family:'Montserrat',sans-serif;width:100px;text-align:center;outline:none}
+.pm-cw input:focus{border-color:#d4a843}
+.pm-warn{color:#e74c3c;font-size:10px;min-height:14px;margin-bottom:8px}
+#pm-qr-area{display:none;margin-bottom:12px}
+#pm-qr-area .qr-box{background:#fff;border-radius:10px;padding:12px;display:inline-block;margin-bottom:10px}
+.pm-copiaecola{background:#161616;border:1px solid #1e1e1e;border-radius:8px;padding:10px 13px;margin-bottom:10px;text-align:left}
+.pm-copiaecola p{color:#555;font-size:9px;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;text-align:center}
+.pm-copiaecola span{color:#d4a843;font-size:9px;word-break:break-all;line-height:1.5;display:block;margin-bottom:7px}
+.pm-cb{background:#222;color:#999;border:none;border-radius:4px;padding:5px 12px;font-size:10px;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:700;width:100%}
+.pm-cb:hover{background:#d4a843;color:#111}
+.pm-status{padding:9px 14px;border-radius:7px;font-size:11px;font-weight:700;margin-bottom:10px;display:none}
+.pm-status.aguardando{background:#1a1200;color:#d4a843;border:1px solid #2a1e00}
+.pm-status.confirmado{background:#0a2a15;color:#27ae60;border:1px solid #1a5530}
+.pm-status.erro{background:#2a0a0a;color:#e74c3c;border:1px solid #5a1a1a}
+.pm-actions{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+.pm-pay{background:#d4a843;color:#111;border:none;border-radius:7px;padding:11px 22px;font-size:11px;font-weight:900;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .2s;letter-spacing:.5px}
+.pm-pay:hover:not(:disabled){background:#f0c060}
+.pm-pay:disabled{opacity:.5;cursor:not-allowed}
+.pm-print{background:#27ae60;color:#fff;border:none;border-radius:7px;padding:11px 22px;font-size:11px;font-weight:900;font-family:'Montserrat',sans-serif;cursor:pointer;display:none;transition:all .2s}
+.pm-print:hover{background:#2ecc71}
+.pm-spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(0,0,0,.2);border-top-color:#111;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:5px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* PRINT */
+@media print{
+  *,*::before,*::after{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
+  #toolbar,#owner-screen,#pay-bg,.rm-btn,.add-btns,.name-lock{display:none!important}
+  [data-no-photo="1"]{display:none!important}
+  body{background:transparent!important;padding:0;margin:0}
+  #page-wrapper{padding:0!important}
+  .cv-page{box-shadow:none!important;width:100%!important;display:none!important}
+  .cv-page.active-model{display:flex!important}
+  [contenteditable]{outline:none!important;background:transparent!important}
+  #cv1 .L,#cv1 .ch{background-color:#111!important}
+  #cv2 .top{background-color:#1a1209!important}
+  #cv2 .side2{background-color:#ede8e1!important}
+  #cv3 .side3{background-color:#fafafa!important}
+  #cv4 .top4{background-color:#2b1d0e!important}
+  #cv4 .side4{background-color:#f4ede4!important}
+  #cv4 .pr4{background-color:#fff!important}
+  #cv5{background-color:#0c0a06!important}
+  #cv5 .top5{background-color:#0c0a06!important}
+  #cv5 .side5{background-color:#080706!important}
+  #cv5 .pr5{background-color:#0e0c07!important}
+  #cv5 .pw5-placeholder{display:none!important}
+}
+</style>
+</head>
+
+<div id="owner-screen">
+  <h2>🔐 Área do Proprietário</h2>
+  <p>Digite a senha para editar o nome.<br>Clientes: clique em <strong>Continuar</strong>.</p>
+  <input type="password" id="opass" placeholder="••••" maxlength="30" onkeydown="if(event.key==='Enter')chkOwner()">
+  <div id="owner-err"></div>
+  <button class="o-btn" onclick="chkOwner()">✔ Entrar como Dono</button>
+  <span id="owner-skip" onclick="skipOwner()">Continuar como cliente</span>
+</div>
+
+<body>
+<div id="toolbar">
+  <span class="tb-label">✏</span>
+  <button class="btn btn-edit" id="btnEdit" onclick="toggleEdit()">✏️ Editar</button>
+  <div class="tb-sep"></div>
+  <span class="tb-label">Modelo:</span>
+  <div class="mtabs">
+    <div class="mtab active" onclick="swM(1,this)">⚙ Clássico</div>
+    <div class="mtab" onclick="swM(2,this)">✦ Editorial</div>
+    <div class="mtab" onclick="swM(3,this)">◇ Minimalista</div>
+    <div class="mtab" onclick="swM(4,this)">◈ Elegant</div>
+    <div class="mtab" onclick="swM(5,this)">✦ Art Déco</div>
+  </div>
+  <div class="tb-sep"></div>
+  <button class="btn btn-pdf" onclick="openPay()">🖨 Gerar PDF</button>
+  <span id="edit-badge">● EDITANDO</span>
+</div>
+
+<div id="page-wrapper">
+
+<!-- M1 CLÁSSICO -->
+<div class="cv-page active-model" id="cv1">
+  <div class="L">
+    <div class="pw" id="pw1" onclick="tp(1)">
+      <img id="ph1" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;object-position:center top">
+      <div class="foto-placeholder" style="color:#fff"><div class="fp-icon">📷</div><div class="fp-txt">Clique para<br>adicionar foto</div></div>
+      <div class="po" style="pointer-events:none"><svg width="22" height="22" fill="white" viewBox="0 0 24 24"><path d="M12 15.2A3.2 3.2 0 1 0 12 8.8a3.2 3.2 0 0 0 0 6.4zM20 4h-3.17L15 2H9L7.17 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm-8 13a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/></svg><span style="font-size:10px;font-weight:700;color:#fff;margin-top:4px;display:block">Trocar / Remover</span></div>
+    </div>
+    <input type="file" id="pi1" accept="image/*" onchange="lp(event,1)" style="display:none">
+    <div class="ls"><div class="lt">Contato</div>
+      <div class="ci"><div class="cii">📞</div><div class="cit" contenteditable="false">(31) 99999-0000</div></div>
+      <div class="ci"><div class="cii">✉</div><div class="cit" contenteditable="false">email@gmail.com</div></div>
+      <div class="ci"><div class="cii">📍</div><div class="cit" contenteditable="false">Cidade – UF, Brasil</div></div>
+      <div class="ci"><div class="cii">in</div><div class="cit"><a href="#" contenteditable="false">linkedin.com/in/perfil</a></div></div>
+      <div class="ci"><div class="cii">🌐</div><div class="cit"><a href="#" contenteditable="false">seusite.com</a></div></div>
+    </div>
+    <div class="ls"><div class="lt">Formação</div>
+      <div id="ac1"><div class="aci" style="position:relative">
+        <button class="rm-btn" style="top:0;right:0" onclick="rmA(this)">✕</button>
+        <div class="acc" contenteditable="false">Nome do Curso</div>
+        <div class="acs" contenteditable="false">Instituição</div>
+        <div class="acy" contenteditable="false">2020 – 2023</div>
+      </div></div>
+      <div class="add-btns"><button class="btn btn-add" onclick="om('ac','1')">+ Formação</button></div>
+    </div>
+    <div class="ls"><div class="lt">Habilidades</div>
+      <div class="skw"><div class="skn" contenteditable="false">Habilidade 1</div><div class="skb"><div class="skf" style="width:90%"></div></div></div>
+      <div class="skw"><div class="skn" contenteditable="false">Habilidade 2</div><div class="skb"><div class="skf" style="width:75%"></div></div></div>
+      <div class="skw"><div class="skn" contenteditable="false">Habilidade 3</div><div class="skb"><div class="skf" style="width:60%"></div></div></div>
+    </div>
+    <div class="deco">⚙ 🔧 ⚙</div>
+  </div>
+  <div class="R">
+    <div class="ch"><div class="chd">⚙</div>
+      <div style="display:flex;align-items:baseline;gap:6px"><div class="cn" id="n1" contenteditable="false">Nome Completo</div><span class="name-lock">🔒</span></div>
+      <div class="cr" contenteditable="false">Cargo · Especialidade · Área</div>
+    </div>
+    <div class="ct">
+      <div class="st">Objetivo Profissional</div>
+      <div class="obj" contenteditable="false">Descreva seu objetivo profissional, motivações e o que busca na próxima oportunidade.</div>
+      <div class="st">Histórico de Trabalho</div>
+      <div id="jl1"><div class="job" style="position:relative">
+        <button class="rm-btn" style="top:6px;right:0" onclick="rmJ(this)">✕</button>
+        <div class="jco" contenteditable="false">Nome da Empresa LTDA</div>
+        <div class="jro" contenteditable="false">Cargo / Função</div>
+        <div class="jpe" contenteditable="false">01/2020 – Presente · Cidade, UF</div>
+      </div></div>
+      <div class="add-btns"><button class="btn btn-add" onclick="om('job','1')">+ Experiência</button></div>
+      <div class="st">Projetos</div>
+      <div id="pl1"><div class="prj" style="position:relative">
+        <button class="rm-btn" style="top:6px;right:0" onclick="rmP(this)">✕</button>
+        <div class="pjn" contenteditable="false">Nome do Projeto</div>
+        <div class="pjd" contenteditable="false">Descrição do projeto e tecnologias utilizadas.</div>
+        <div class="pjl"><a href="#" contenteditable="false">seusite.com</a></div>
+      </div></div>
+      <div class="add-btns"><button class="btn btn-add" onclick="om('proj','1')">+ Projeto</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- M2 EDITORIAL -->
+<div class="cv-page" id="cv2">
+  <div class="top">
+    <div class="pw2" id="pw2" onclick="tp(2)">
+      <img id="ph2" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover">
+      <div class="foto-placeholder" style="color:#d4a843"><div class="fp-icon">📷</div><div class="fp-txt" style="color:#d4a843;opacity:.7">Adicionar foto</div></div>
+      <div class="po2" style="pointer-events:none"><span style="color:#fff;font-size:9px;font-weight:700;font-family:Montserrat,sans-serif">Trocar / Remover</span></div>
+    </div>
+    <input type="file" id="pi2" accept="image/*" onchange="lp(event,2)" style="display:none">
+    <div class="hi">
+      <div style="display:flex;align-items:baseline;gap:7px"><div class="cn2" id="n2" contenteditable="false">Nome Completo</div><span class="name-lock" style="color:#d4a843">🔒</span></div>
+      <div class="cr2" contenteditable="false">Cargo · Especialidade · Área</div>
+      <div class="cc2">
+        <div class="cci"><span class="ic">📞</span><span contenteditable="false">(31) 99999-0000</span></div>
+        <div class="cci"><span class="ic">✉</span><span contenteditable="false">email@gmail.com</span></div>
+        <div class="cci"><span class="ic">📍</span><span contenteditable="false">Cidade – UF, Brasil</span></div>
+        <div class="cci"><span class="ic">in</span><span contenteditable="false">linkedin.com/in/perfil</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="body2">
+    <div class="main2">
+      <div class="st2m">Objetivo Profissional</div>
+      <div class="obj2" contenteditable="false">Descreva seu objetivo profissional, motivações e o que busca na próxima oportunidade.</div>
+      <div class="st2m">Experiência Profissional</div>
+      <div id="jl2"><div class="jb2" style="position:relative">
+        <button class="rm-btn" style="top:0;right:0" onclick="rmJ(this)">✕</button>
+        <div class="jh2"><div class="jco2" contenteditable="false">Nome da Empresa LTDA</div><div class="jpe2" contenteditable="false">2020–Presente</div></div>
+        <div class="jro2" contenteditable="false">Cargo / Função</div>
+      </div></div>
+      <div class="add-btns"><button class="btn btn-add" onclick="om('job','2')">+ Experiência</button></div>
+      <div class="st2m">Projetos</div>
+      <div id="pl2"><div class="pr2" style="position:relative">
+        <button class="rm-btn" style="top:0;right:0" onclick="rmP(this)">✕</button>
+        <div class="pn2" contenteditable="false">Nome do Projeto</div>
+        <div class="pd2" contenteditable="false">Descrição do projeto e tecnologias utilizadas.</div>
+        <div class="pl2"><a href="#" contenteditable="false">seusite.com</a></div>
+      </div></div>
+      <div class="add-btns"><button class="btn btn-add" onclick="om('proj','2')">+ Projeto</button></div>
+    </div>
+    <div class="side2">
+      <div class="st2s">Formação</div>
+      <div id="ac2"><div class="ac2" style="position:relative">
+        <button class="rm-btn" style="top:0;right:0" onclick="rmA(this)">✕</button>
+        <div class="acc2" contenteditable="false">Nome do Curso</div>
+        <div class="acs2" contenteditable="false">Instituição</div>
+        <div class="acy2" contenteditable="false">2020 – 2023</div>
+      </div></div>
+      <div class="add-btns"><button class="btn btn-add" style="font-size:9px;padding:4px 8px" onclick="om('ac','2')">+ Formação</button></div>
+      <div class="st2s" style="margin-top:16px">Habilidades</div>
+      <div class="sk2"><div class="skn2" contenteditable="false">Habilidade 1</div><div class="skb2"><div class="skf2" style="width:90%"></div></div></div>
+      <div class="sk2"><div class="skn2" contenteditable="false">Habilidade 2</div><div class="skb2"><div class="skf2" style="width:75%"></div></div></div>
+      <div class="sk2"><div class="skn2" contenteditable="false">Habilidade 3</div><div class="skb2"><div class="skf2" style="width:60%"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- M3 MINIMALISTA CLEAN -->
+<div class="cv-page" id="cv3">
+  <div class="top3">
+    <div class="pw3" id="pw3" onclick="tp(3)">
+      <img id="ph3" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover">
+      <div class="foto-placeholder" style="color:#999"><div class="fp-icon">📷</div><div class="fp-txt">Adicionar foto</div></div>
+      <div class="po3" style="pointer-events:none"><span style="color:#fff;font-size:9px;font-weight:600;font-family:Montserrat,sans-serif">Trocar / Remover</span></div>
+    </div>
+    <input type="file" id="pi3" accept="image/*" onchange="lp(event,3)" style="display:none">
+    <div class="hi3">
+      <div style="display:flex;align-items:baseline;gap:7px"><div class="cn3" id="n3" contenteditable="false">Nome Completo</div><span class="name-lock" style="color:#aaa">🔒</span></div>
+      <div class="cr3" contenteditable="false">Cargo · Especialidade · Área</div>
+      <div class="cc3">
+        <div class="cci3"><span>📞</span><span contenteditable="false">(31) 99999-0000</span></div>
+        <div class="cci3"><span>✉</span><span contenteditable="false">email@gmail.com</span></div>
+        <div class="cci3"><span>📍</span><span contenteditable="false">Cidade – UF, Brasil</span></div>
+        <div class="cci3"><span>in</span><span contenteditable="false">linkedin.com/in/perfil</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="body3">
+    <div class="main3">
+      <div class="st3m">Objetivo</div>
+      <div class="st3m-line"></div>
+      <div class="obj3" contenteditable="false">Descreva seu objetivo profissional, motivações e o que busca na próxima oportunidade.</div>
+      <div class="st3m" style="margin-top:22px">Experiência</div>
+      <div class="st3m-line"></div>
+      <div id="jl3"><div class="jb3" style="position:relative">
+        <button class="rm-btn" style="top:0;right:0" onclick="rmJ(this)">✕</button>
+        <div class="jco3" contenteditable="false">Nome da Empresa LTDA</div>
+        <div class="jro3" contenteditable="false">Cargo / Função</div>
+        <div class="jpe3" contenteditable="false">01/2020 – Presente · Cidade, UF</div>
+      </div></div>
+      <div class="add-btns"><button class="btn btn-add" onclick="om('job','3')">+ Experiência</button></div>
+      <div class="st3m" style="margin-top:22px">Projetos</div>
+      <div class="st3m-line"></div>
+      <div id="pl3"><div class="pr3" style="position:relative">
+        <button class="rm-btn" style="top:6px;right:0" onclick="rmP(this)">✕</button>
+        <div class="pn3" contenteditable="false">Nome do Projeto</div>
+        <div class="pd3" contenteditable="false">Descrição do projeto e tecnologias utilizadas.</div>
+        <div class="pl3"><a href="#" contenteditable="false">seusite.com</a></div>
+      </div></div>
+      <div class="add-btns"><button class="btn btn-add" onclick="om('proj','3')">+ Projeto</button></div>
+    </div>
+    <div class="side3">
+      <div class="st3s">Formação</div>
+      <div id="ac3"><div class="ac3" style="position:relative">
+        <button class="rm-btn" style="top:0;right:0" onclick="rmA(this)">✕</button>
+        <div class="acc3" contenteditable="false">Nome do Curso</div>
+        <div class="acs3" contenteditable="false">Instituição</div>
+        <div class="acy3" contenteditable="false">2020 – 2023</div>
+      </div></div>
+      <div class="add-btns"><button class="btn btn-add" style="font-size:9px;padding:4px 8px" onclick="om('ac','3')">+ Formação</button></div>
+      <div class="st3s" style="margin-top:18px">Habilidades</div>
+      <div class="sk3"><div class="skn3" contenteditable="false">Habilidade 1</div><div class="skb3"><div class="skf3" style="width:90%"></div></div></div>
+      <div class="sk3"><div class="skn3" contenteditable="false">Habilidade 2</div><div class="skb3"><div class="skf3" style="width:75%"></div></div></div>
+      <div class="sk3"><div class="skn3" contenteditable="false">Habilidade 3</div><div class="skb3"><div class="skf3" style="width:60%"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- M4 ELEGANT -->
+<div class="cv-page" id="cv4">
+  <div class="top4">
+    <div class="pw4" id="pw4" onclick="tp(4)">
+      <img id="ph4" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover">
+      <div class="foto-placeholder" style="color:#c9a84c"><div class="fp-icon">📷</div><div class="fp-txt" style="color:#c9a84c;opacity:.8">Foto</div></div>
+      <div class="po4" style="pointer-events:none"><span style="color:#fff;font-size:9px;font-weight:700;font-family:Montserrat,sans-serif">Trocar / Remover</span></div>
+    </div>
+    <input type="file" id="pi4" accept="image/*" onchange="lp(event,4)" style="display:none">
+    <div class="hi4">
+      <div style="display:flex;align-items:baseline;gap:7px"><div class="cn4" id="n4" contenteditable="false">Nome Completo</div><span class="name-lock" style="color:#c9a84c">🔒</span></div>
+      <div class="cr4" contenteditable="false">Cargo · Especialidade · Área</div>
+      <div class="cc4">
+        <div class="cci4"><span class="ic">📞</span><span contenteditable="false">(31) 99999-0000</span></div>
+        <div class="cci4"><span class="ic">✉</span><span contenteditable="false">email@gmail.com</span></div>
+        <div class="cci4"><span class="ic">📍</span><span contenteditable="false">Cidade – UF, Brasil</span></div>
+        <div class="cci4"><span class="ic">in</span><span contenteditable="false">linkedin.com/in/perfil</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="body4">
+    <div class="main4">
+      <div class="st4m">Objetivo Profissional</div>
+      <div class="obj4" contenteditable="false">Descreva seu objetivo profissional, motivações e o que busca na próxima oportunidade.</div>
+      <div class="st4m">Experiência Profissional</div>
+      <div id="jl4"><div class="jb4" style="position:relative">
+        <button class="rm-btn" style="top:0;right:0" onclick="rmJ(this)">✕</button>
+        <div class="jco4" contenteditable="false">Nome da Empresa LTDA</div>
+        <div class="jro4" contenteditable="false">Cargo / Função</div>
+        <div class="jpe4" contenteditable="false">01/2020 – Presente · Cidade, UF</div>
+      </div></div>
+      <div class="add-btns"><button class="btn btn-add" onclick="om('job','4')">+ Experiência</button></div>
+      <div class="st4m">Projetos</div>
+      <div id="pl4"><div class="pr4" style="position:relative">
+        <button class="rm-btn" style="top:6px;right:6px" onclick="rmP(this)">✕</button>
+        <div class="pn4" contenteditable="false">Nome do Projeto</div>
+        <div class="pd4" contenteditable="false">Descrição do projeto e tecnologias utilizadas.</div>
+        <div class="pl4"><a href="#" contenteditable="false">seusite.com</a></div>
+      </div></div>
+      <div class="add-btns"><button class="btn btn-add" onclick="om('proj','4')">+ Projeto</button></div>
+    </div>
+    <div class="side4">
+      <div class="st4s">Formação</div>
+      <div id="ac4"><div class="ac4" style="position:relative">
+        <button class="rm-btn" style="top:0;right:0" onclick="rmA(this)">✕</button>
+        <div class="acc4" contenteditable="false">Nome do Curso</div>
+        <div class="acs4" contenteditable="false">Instituição</div>
+        <div class="acy4" contenteditable="false">2020 – 2023</div>
+      </div></div>
+      <div class="add-btns"><button class="btn btn-add" style="font-size:9px;padding:4px 8px" onclick="om('ac','4')">+ Formação</button></div>
+      <div class="st4s" style="margin-top:15px">Habilidades</div>
+      <div class="sk4"><div class="skn4" contenteditable="false">Habilidade 1</div><div class="skb4"><div class="skf4" style="width:90%"></div></div></div>
+      <div class="sk4"><div class="skn4" contenteditable="false">Habilidade 2</div><div class="skb4"><div class="skf4" style="width:75%"></div></div></div>
+      <div class="sk4"><div class="skn4" contenteditable="false">Habilidade 3</div><div class="skb4"><div class="skf4" style="width:60%"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- M5 ART DÉCO LUXO -->
+<div class="cv-page" id="cv5">
+  <div class="top5">
+    <div class="pw5" id="pw5" onclick="tp(5)">
+      <img id="ph5" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover">
+      <div class="foto-placeholder" style="color:#c9a84c"><div class="fp-icon">📷</div><div class="fp-txt" style="color:#c9a84c;opacity:.8">Foto</div></div>
+      <div class="po5" style="pointer-events:none"><span style="color:#c9a84c;font-size:9px;font-weight:700">Trocar / Remover</span></div>
+    </div>
+    <input type="file" id="pi5" accept="image/*" onchange="lp(event,5)" style="display:none">
+    <div class="hi5">
+      <div style="display:flex;align-items:baseline;gap:7px"><div class="cn5" id="n5" contenteditable="false">Nome Completo</div><span class="name-lock" style="color:#c9a84c">🔒</span></div>
+      <div class="cr5" contenteditable="false">Cargo · Especialidade · Área</div>
+      <div class="cc5">
+        <div class="cci5"><span class="ic">📞</span><span contenteditable="false">(31) 99999-0000</span></div>
+        <div class="cci5"><span class="ic">✉</span><span contenteditable="false">email@gmail.com</span></div>
+        <div class="cci5"><span class="ic">📍</span><span contenteditable="false">Cidade – UF, Brasil</span></div>
+        <div class="cci5"><span class="ic">in</span><span contenteditable="false">linkedin.com/in/perfil</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="deco5-top">✦ · · ✦ · · ✦</div>
+  <div class="body5">
+    <div class="main5">
+      <div class="st5m">Objetivo Profissional</div>
+      <div class="st5m-orn">— ✦ —</div>
+      <div class="obj5" contenteditable="false">Descreva seu objetivo profissional, motivações e o que busca na próxima oportunidade.</div>
+      <div class="st5m" style="margin-top:22px">Experiência Profissional</div>
+      <div class="st5m-orn">— ✦ —</div>
+      <div id="jl5"><div class="jb5" style="position:relative">
+        <button class="rm-btn" style="top:0;right:0;color:#2a2010" onclick="rmJ(this)">✕</button>
+        <div class="jco5" contenteditable="false">Nome da Empresa LTDA</div>
+        <div class="jro5" contenteditable="false">Cargo / Função</div>
+        <div class="jpe5" contenteditable="false">01/2020 – Presente · Cidade, UF</div>
+      </div></div>
+      <div class="add-btns"><button class="btn btn-add" style="background:#1a1408;color:#c9a84c;border:1px solid #2a2010" onclick="om('job','5')">+ Experiência</button></div>
+      <div class="st5m" style="margin-top:22px">Projetos</div>
+      <div class="st5m-orn">— ✦ —</div>
+      <div id="pl5"><div class="pr5" style="position:relative">
+        <button class="rm-btn" style="top:6px;right:6px;color:#2a2010" onclick="rmP(this)">✕</button>
+        <div class="pn5" contenteditable="false">Nome do Projeto</div>
+        <div class="pd5" contenteditable="false">Descrição do projeto e tecnologias utilizadas.</div>
+        <div class="pl5"><a href="#" contenteditable="false">seusite.com</a></div>
+      </div></div>
+      <div class="add-btns"><button class="btn btn-add" style="background:#1a1408;color:#c9a84c;border:1px solid #2a2010" onclick="om('proj','5')">+ Projeto</button></div>
+    </div>
+    <div class="side5">
+      <div class="st5s">Formação</div>
+      <div id="ac5"><div class="ac5" style="position:relative">
+        <button class="rm-btn" style="top:0;right:0;color:#2a2010" onclick="rmA(this)">✕</button>
+        <div class="acc5" contenteditable="false">Nome do Curso</div>
+        <div class="acs5" contenteditable="false">Instituição</div>
+        <div class="acy5" contenteditable="false">2020 – 2023</div>
+      </div></div>
+      <div class="add-btns"><button class="btn btn-add" style="font-size:9px;padding:4px 8px;background:#1a1408;color:#c9a84c;border:1px solid #2a2010" onclick="om('ac','5')">+ Formação</button></div>
+      <div class="st5s" style="margin-top:16px">Habilidades</div>
+      <div class="sk5"><div class="skn5" contenteditable="false">Habilidade 1</div><div class="skb5"><div class="skf5" style="width:90%"></div></div></div>
+      <div class="sk5"><div class="skn5" contenteditable="false">Habilidade 2</div><div class="skb5"><div class="skf5" style="width:75%"></div></div></div>
+      <div class="sk5"><div class="skn5" contenteditable="false">Habilidade 3</div><div class="skb5"><div class="skf5" style="width:60%"></div></div></div>
+      <div class="deco5">✦ · ✦ · ✦</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- MODAL -->
+<div id="mbg" class="modal-bg" style="display:none" onclick="if(event.target===this)cm()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3 id="mt">Adicionar</h3><div id="mb"></div>
+    <div class="modal-btns"><button class="btn btn-cancel" onclick="cm()">Cancelar</button><button class="btn btn-ok" onclick="confM()">✔ Adicionar</button></div>
+  </div>
+</div>
+
+<!-- PAGAMENTO -->
+<div id="pay-bg">
+  <div id="pay-box">
+    <button class="pm-close" onclick="closePay()">✕</button>
+    <div class="pm-icon">💛</div>
+    <h2>Baixar seu Currículo</h2>
+    <p class="pm-sub">Este editor é gratuito para usar.<br>Apoie o criador a partir de <strong style="color:#d4a843">R$ 5 via PIX</strong>.<br>O PDF é liberado automaticamente após o pagamento.</p>
+    <div class="pm-vals">
+      <div class="pm-vbtn" onclick="selV(this,5)">R$ 5</div>
+      <div class="pm-vbtn" onclick="selV(this,10)">R$ 10</div>
+      <div class="pm-vbtn" onclick="selV(this,20)">R$ 20</div>
+      <div class="pm-vbtn" onclick="selV(this,50)">R$ 50</div>
+    </div>
+    <div class="pm-cw">
+      <label>Outro valor (min. R$5):</label>
+      <input type="number" id="pm-cv" placeholder="R$ 5" min="5" oninput="clearV()">
+    </div>
+    <div class="pm-warn" id="pm-w"></div>
+
+    <!-- QR CODE PIX gerado pelo EFÍ Bank -->
+    <div id="pm-qr-area">
+      <p style="color:#555;font-size:10px;margin-bottom:8px">Escaneie o QR Code com seu banco:</p>
+      <div class="qr-box">
+        <img id="pm-qr-img" src="" alt="QR Code PIX" width="180" height="180">
+      </div>
+      <div class="pm-copiaecola">
+        <p>PIX Copia e Cola</p>
+        <span id="pm-copiaecola-txt"></span>
+        <button class="pm-cb" onclick="cpCopiaECola()">📋 Copiar código PIX</button>
+      </div>
+      <div class="pm-status aguardando" id="pm-status-msg">
+        ⏳ Aguardando confirmação do pagamento...
+      </div>
+    </div>
+
+    <div class="pm-actions">
+      <button class="pm-pay" id="pm-pp" onclick="gerarPixEfi()">💛 Gerar PIX</button>
+      <button class="pm-print" id="pm-pr" onclick="doPrint()">✅ Baixar PDF</button>
+    </div>
+    <p style="color:#1e1e1e;font-size:10px;margin-top:10px">Obrigado pelo apoio! 🙏</p>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// CONFIGURAÇÕES — PREENCHA COM SEUS DADOS
+// ══════════════════════════════════════════════════════════
+const OWNER_PASS = '1234'; // Senha do proprietário para editar o nome
+
+// EFÍ Bank — Token de integração (modo compatibilidade)
+// Obtenha em: app.sejaefi.com.br > API > Aplicações > Curriculo > ícone 👁
+// ⚠️  SUBSTITUA O VALOR ABAIXO — NÃO COMPARTILHE COM NINGUÉM
+const EFI_TOKEN = '190582315907b563de31664f99e7e4dc';
+
+// Sua chave PIX cadastrada na conta EFÍ (CPF, e-mail ou telefone)
+const EFI_CHAVE_PIX = '80965291-d472-432a-83a5-6b5633138375';
+// ══════════════════════════════════════════════════════════
+
+let editMode=false,isOwner=false,curType=null,curM=null,selVal=null,activeM=1;
+let paymentId=null,pollInterval=null;
+
+function chkOwner(){
+  if(document.getElementById('opass').value===OWNER_PASS){isOwner=true;document.getElementById('owner-screen').style.display='none';}
+  else{document.getElementById('owner-err').textContent='❌ Senha incorreta.';document.getElementById('opass').value='';setTimeout(()=>document.getElementById('owner-err').textContent='',2000);}
+}
+function skipOwner(){document.getElementById('owner-screen').style.display='none';}
+
+function swM(n,btn){
+  document.querySelectorAll('.cv-page').forEach(el=>el.classList.toggle('active-model',el.id==='cv'+n));
+  document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');activeM=n;
+  if(editMode){applyEd(false);applyEd(true);}
+}
+
+function applyEd(on){
+  const cv=document.getElementById('cv'+activeM);if(!cv)return;
+  cv.querySelectorAll('[contenteditable]').forEach(el=>{
+    const nm=el.id&&el.id.startsWith('n');
+    el.setAttribute('contenteditable',on&&(isOwner||!nm)?'true':'false');
+  });
+  cv.querySelectorAll('.rm-btn').forEach(b=>b.style.display=on?'block':'none');
+}
+
+function toggleEdit(){
+  editMode=!editMode;
+  document.body.classList.toggle('editing',editMode);
+  applyEd(editMode);
+  const btn=document.getElementById('btnEdit');
+  btn.textContent=editMode?'🔒 Fechar Edição':'✏️ Editar';
+  btn.className=editMode?'btn btn-edit active':'btn btn-edit';
+  document.getElementById('edit-badge').style.display=editMode?'inline-block':'none';
+}
+
+// ── SISTEMA DE FOTO ──────────────────────────────────────
+function tp(n){
+  const img=document.getElementById('ph'+n);
+  if(img && img.getAttribute('data-has-photo')==='1'){
+    showPhotoMenu(n,img);
+  } else {
+    document.getElementById('pi'+n).click();
+  }
+}
+
+function showPhotoMenu(n,img){
+  // Remove menu anterior se existir
+  const old=document.getElementById('photo-menu');
+  if(old) old.remove();
+
+  const menu=document.createElement('div');
+  menu.id='photo-menu';
+  menu.style.cssText='position:fixed;z-index:99990;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:4px;font-family:Montserrat,sans-serif;box-shadow:0 8px 32px rgba(0,0,0,.8)';
+
+  // Posicionar no centro da tela
+  menu.style.top='50%';
+  menu.style.left='50%';
+  menu.style.transform='translate(-50%,-50%)';
+
+  const btnTroca=document.createElement('button');
+  btnTroca.textContent='📷 Trocar foto';
+  btnTroca.style.cssText='background:#222;color:#d4a843;border:none;border-radius:5px;padding:9px 18px;font-size:11px;font-weight:700;cursor:pointer;font-family:Montserrat,sans-serif;text-align:left';
+  btnTroca.onmouseenter=()=>btnTroca.style.background='#333';
+  btnTroca.onmouseleave=()=>btnTroca.style.background='#222';
+  btnTroca.onclick=()=>{menu.remove();bgOverlay.remove();document.getElementById('pi'+n).click();};
+
+  const btnDel=document.createElement('button');
+  btnDel.textContent='🗑 Remover foto';
+  btnDel.style.cssText='background:#222;color:#e74c3c;border:none;border-radius:5px;padding:9px 18px;font-size:11px;font-weight:700;cursor:pointer;font-family:Montserrat,sans-serif;text-align:left';
+  btnDel.onmouseenter=()=>btnDel.style.background='#333';
+  btnDel.onmouseleave=()=>btnDel.style.background='#222';
+  btnDel.onclick=()=>{removePhoto(n);menu.remove();bgOverlay.remove();};
+
+  const btnCancel=document.createElement('button');
+  btnCancel.textContent='✕ Cancelar';
+  btnCancel.style.cssText='background:none;color:#555;border:none;border-radius:5px;padding:7px 18px;font-size:10px;cursor:pointer;font-family:Montserrat,sans-serif;text-align:left';
+  btnCancel.onclick=()=>{menu.remove();bgOverlay.remove();};
+
+  menu.appendChild(btnTroca);
+  menu.appendChild(btnDel);
+  menu.appendChild(btnCancel);
+
+  // Overlay escuro atrás
+  const bgOverlay=document.createElement('div');
+  bgOverlay.style.cssText='position:fixed;inset:0;z-index:99989;background:rgba(0,0,0,.5)';
+  bgOverlay.onclick=()=>{menu.remove();bgOverlay.remove();};
+
+  document.body.appendChild(bgOverlay);
+  document.body.appendChild(menu);
+}
+
+function removePhoto(n){
+  const img=document.getElementById('ph'+n);
+  if(!img) return;
+  img.src='';
+  img.style.display='none';
+  img.removeAttribute('data-has-photo');
+  const pw=document.getElementById('pw'+n);
+  if(pw) pw.removeAttribute('data-has-photo');
+  updatePhotoContainer(n, false);
+  const inp=document.getElementById('pi'+n);
+  if(inp) inp.value='';
+}
+
+function updatePhotoContainer(n, hasPhoto){
+  const pw=document.getElementById('pw'+n);
+  if(!pw) return;
+  // Container sempre visível para o cliente interagir
+  // data-no-photo só serve para esconder no print via CSS
+  if(hasPhoto){
+    pw.removeAttribute('data-no-photo');
+  } else {
+    pw.setAttribute('data-no-photo','1');
+  }
+}
+
+function lp(e,n){
+  const f=e.target.files[0];
+  if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    const img=document.getElementById('ph'+n);
+    img.src=ev.target.result;
+    img.style.display='block';
+    // Marcar o container como "tem foto" para esconder placeholder e mostrar overlay
+    const pw=document.getElementById('pw'+n);
+    if(pw) pw.setAttribute('data-has-photo','1');
+    img.setAttribute('data-has-photo','1');
+    updatePhotoContainer(n, true);
+  };
+  r.readAsDataURL(f);
+}
+
+function rmJ(b){if(confirm('Remover esta experiência?'))b.parentElement.remove();}
+function rmP(b){if(confirm('Remover este projeto?'))b.parentElement.remove();}
+function rmA(b){if(confirm('Remover esta formação?'))b.parentElement.remove();}
+
+function om(type,model){
+  curType=type;curM=model;
+  const title=document.getElementById('mt');const body=document.getElementById('mb');
+  if(type==='job'){title.textContent='+ Nova Experiência';body.innerHTML='<label>Empresa</label><input id="mc1" placeholder="Empresa LTDA"><label>Cargo</label><input id="mc2" placeholder="Mecânico / Analista..."><label>Período</label><input id="mc3" placeholder="01/2020 – 12/2022">';}
+  else if(type==='proj'){title.textContent='+ Novo Projeto';body.innerHTML='<label>Nome</label><input id="mc1" placeholder="Nome do Projeto"><label>Descrição</label><textarea id="mc2" placeholder="Descreva..."></textarea><label>URL (opcional)</label><input id="mc3" placeholder="https://seusite.com">';}
+  else{title.textContent='+ Nova Formação';body.innerHTML='<label>Curso</label><input id="mc1" placeholder="Técnico em Mecânica"><label>Instituição</label><input id="mc2" placeholder="Senai / UFMG..."><label>Período</label><input id="mc3" placeholder="2020 / 2022">';}
+  document.getElementById('mbg').style.display='flex';
+  setTimeout(()=>{const f=document.getElementById('mb').querySelector('input,textarea');if(f)f.focus();},80);
+}
+function cm(){document.getElementById('mbg').style.display='none';curType=null;}
+
+function confM(){
+  const v1=document.getElementById('mc1').value.trim();
+  const v2=document.getElementById('mc2').value.trim();
+  const v3=document.getElementById('mc3').value.trim();
+  if(!v1){alert('Preencha o primeiro campo.');return;}
+  const m=curM;const ed=editMode;
+  const mk=`contenteditable="${ed}"`;
+
+  if(curType==='job'){
+    const list=document.getElementById('jl'+m);
+    const div=document.createElement('div');div.style.position='relative';
+    if(m==='2'){
+      div.className='jb2';
+      div.innerHTML=`<button class="rm-btn" style="top:0;right:0" onclick="rmJ(this)">✕</button><div class="jh2"><div class="jco2" ${mk}>${v1}</div><div class="jpe2" ${mk}>${v3||'Período'}</div></div><div class="jro2" ${mk}>${v2||'Cargo'}</div>`;
+    }else{
+      const p=m==='1'?'':m==='3'?'3':m==='4'?'4':'5';
+      const cls=`jb${p||''}`;
+      div.className=p?'jb'+p:'job';
+      const rc=m==='5'?';color:#2a2a2a':'';
+      div.innerHTML=`<button class="rm-btn" style="top:6px;right:0${rc}" onclick="rmJ(this)">✕</button><div class="jco${p}" ${mk}>${v1}</div><div class="jro${p}" ${mk}>${v2||'Cargo'}</div><div class="jpe${p}" ${mk}>${v3||'Período'}</div>`;
+    }
+    list.prepend(div);
+  }else if(curType==='proj'){
+    const list=document.getElementById('pl'+m);
+    const div=document.createElement('div');div.style.position='relative';
+    const p=m==='1'?'':m;
+    const cls=m==='1'?'prj':m==='2'?'pr2':m==='3'?'pr3':m==='4'?'pr4':'pr5';
+    const nc=m==='1'?'pjn':m==='2'?'pn2':m==='3'?'pn3':m==='4'?'pn4':'pn5';
+    const dc=m==='1'?'pjd':m==='2'?'pd2':m==='3'?'pd3':m==='4'?'pd4':'pd5';
+    const lc=m==='1'?'pjl':m==='2'?'pl2':m==='3'?'pl3':m==='4'?'pl4':'pl5';
+    const rmst=m==='1'?'top:6px;right:0':m==='2'?'top:0;right:0':'top:6px;right:6px';
+    const rmcl=m==='5'?';color:#2a2a2a':'';
+    const la=m==='1'?`<a href="${v3}" target="_blank">${v3}</a>`:m==='3'?`<a href="${v3}" target="_blank">${v3}</a>`:m==='5'?`<a href="${v3}" target="_blank">${v3}</a>`:m==='4'?`<a href="${v3}" target="_blank">${v3}</a>`:m==='2'?`<a href="${v3}" target="_blank">${v3}</a>`:'';
+    div.className=cls;
+    div.innerHTML=`<button class="rm-btn" style="${rmst}${rmcl}" onclick="rmP(this)">✕</button><div class="${nc}" ${mk}>${v1}</div><div class="${dc}" ${mk}>${v2}</div>${v3?`<div class="${lc}">${la}</div>`:''}`;
+    list.appendChild(div);
+  }else{
+    const list=document.getElementById('ac'+m);
+    const div=document.createElement('div');div.style.position='relative';div.style.paddingRight='13px';
+    const cls=m==='1'?'aci':m==='2'?'ac2':m==='3'?'ac3':m==='4'?'ac4':'ac5';
+    const cc=m==='1'?'acc':m==='2'?'acc2':m==='3'?'acc3':m==='4'?'acc4':'acc5';
+    const cs=m==='1'?'acs':m==='2'?'acs2':m==='3'?'acs3':m==='4'?'acs4':'acs5';
+    const cy=m==='1'?'acy':m==='2'?'acy2':m==='3'?'acy3':m==='4'?'acy4':'acy5';
+    const rc=m==='3'?';color:#555':m==='5'?';color:#2a2a2a':'';
+    div.className=cls;
+    div.innerHTML=`<button class="rm-btn" style="top:0;right:0${rc}" onclick="rmA(this)">✕</button><div class="${cc}" ${mk}>${v1}</div><div class="${cs}" ${mk}>${v2}</div><div class="${cy}" ${mk}>${v3}</div>`;
+    list.appendChild(div);
+  }
+  cm();
+}
+
+// ── PAGAMENTO ──────────────────────────────────────────────
+function openPay(){
+  if(editMode)toggleEdit();
+  document.getElementById('pay-bg').style.display='flex';
+  document.querySelectorAll('.pm-vbtn').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('pm-cv').value='';
+  document.getElementById('pm-w').textContent='';
+  document.getElementById('pm-qr-area').style.display='none';
+  document.getElementById('pm-pp').style.display='inline-block';
+  document.getElementById('pm-pp').disabled=false;
+  document.getElementById('pm-pp').innerHTML='💛 Gerar PIX';
+  document.getElementById('pm-pr').style.display='none';
+  setStatus('','');
+  selVal=null; paymentId=null;
+  if(pollInterval){clearInterval(pollInterval);pollInterval=null;}
+}
+
+function closePay(){
+  document.getElementById('pay-bg').style.display='none';
+  if(pollInterval){clearInterval(pollInterval);pollInterval=null;}
+}
+
+function selV(btn,v){
+  document.querySelectorAll('.pm-vbtn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel'); selVal=v;
+  document.getElementById('pm-cv').value='';
+  document.getElementById('pm-w').textContent='';
+}
+
+function clearV(){
+  document.querySelectorAll('.pm-vbtn').forEach(b=>b.classList.remove('sel'));
+  selVal=null;
+}
+
+function setStatus(msg,tipo){
+  const el=document.getElementById('pm-status-msg');
+  el.textContent=msg;
+  el.className='pm-status';
+  if(tipo) el.classList.add(tipo);
+  el.style.display=msg?'block':'none';
+}
+
+async function gerarPixEfi(){
+  const cv=parseFloat(document.getElementById('pm-cv').value)||0;
+  const val=selVal||cv;
+  if(!val||val<5){document.getElementById('pm-w').textContent='⚠ Valor mínimo: R$ 5,00';return;}
+  document.getElementById('pm-w').textContent='';
+
+  const btn=document.getElementById('pm-pp');
+  btn.disabled=true;
+  btn.innerHTML='<span class="pm-spin"></span> Gerando PIX...';
+
+  try{
+    // ── Passo 1: Autenticar e obter access_token OAuth ──
+    // Modo compatibilidade EFÍ: token único usado como client_id e client_secret
+    const authRes=await fetch('https://pix.api.efipay.com.br/oauth/token',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Basic '+btoa(EFI_TOKEN+':'+EFI_TOKEN)
+      },
+      body:JSON.stringify({grant_type:'client_credentials'})
+    });
+
+    if(!authRes.ok){
+      const err=await authRes.json().catch(()=>({}));
+      throw new Error('Erro de autenticação EFÍ: '+(err.message||authRes.status));
+    }
+
+    const authData=await authRes.json();
+    const accessToken=authData.access_token;
+    if(!accessToken) throw new Error('Token de acesso não retornado');
+
+    // ── Passo 2: Criar cobrança PIX imediata (cob) ──
+    const expiracao=new Date(Date.now()+30*60*1000).toISOString(); // expira em 30min
+    const cobRes=await fetch('https://pix.api.efipay.com.br/v2/cob',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer '+accessToken
+      },
+      body:JSON.stringify({
+        calendario:{expiracao:1800},
+        valor:{original: val.toFixed(2)},
+        chave: EFI_CHAVE_PIX,
+        solicitacaoPagador:'Currículo Profissional PDF'
+      })
+    });
+
+    if(!cobRes.ok){
+      const err=await cobRes.json().catch(()=>({}));
+      throw new Error('Erro ao criar cobrança: '+(err.detail||err.message||cobRes.status));
+    }
+
+    const cobData=await cobRes.json();
+    paymentId=cobData.txid;
+
+    // ── Passo 3: Gerar QR Code ──
+    const qrRes=await fetch('https://pix.api.efipay.com.br/v2/loc/'+cobData.loc.id+'/qrcode',{
+      headers:{'Authorization':'Bearer '+accessToken}
+    });
+
+    if(!qrRes.ok) throw new Error('Erro ao gerar QR Code');
+
+    const qrData=await qrRes.json();
+
+    // Guarda token para polling
+    window._efiAccessToken=accessToken;
+
+    // Exibe QR Code
+    document.getElementById('pm-qr-img').src=qrData.imagemQrcode;
+    document.getElementById('pm-copiaecola-txt').textContent=qrData.qrcode;
+    document.getElementById('pm-qr-area').style.display='block';
+    setStatus('⏳ Aguardando confirmação do pagamento...','aguardando');
+    document.getElementById('pm-status-msg').style.display='block';
+    btn.innerHTML='🔄 Aguardando pagamento...';
+
+    iniciarPolling();
+
+  }catch(e){
+    console.error(e);
+    document.getElementById('pm-w').textContent='❌ '+e.message;
+    btn.disabled=false;
+    btn.innerHTML='💛 Tentar novamente';
+  }
+}
+
+function iniciarPolling(){
+  if(pollInterval) clearInterval(pollInterval);
+  pollInterval=setInterval(async()=>{
+    try{
+      const res=await fetch('https://pix.api.efipay.com.br/v2/cob/'+paymentId,{
+        headers:{'Authorization':'Bearer '+(window._efiAccessToken||'')}
+      });
+      if(!res.ok) return;
+      const data=await res.json();
+
+      // Status EFÍ: ATIVA=aguardando, CONCLUIDA=pago, REMOVIDA_*=cancelado
+      if(data.status==='CONCLUIDA'){
+        clearInterval(pollInterval); pollInterval=null;
+        setStatus('✅ Pagamento confirmado! Clique em Baixar PDF.','confirmado');
+        document.getElementById('pm-pp').style.display='none';
+        document.getElementById('pm-pr').style.display='inline-block';
+      } else if(data.status&&data.status.startsWith('REMOVIDA')){
+        clearInterval(pollInterval); pollInterval=null;
+        setStatus('❌ Pagamento não concluído. Tente novamente.','erro');
+        const btn=document.getElementById('pm-pp');
+        btn.disabled=false; btn.innerHTML='💛 Gerar novo PIX';
+      }
+    }catch(e){ console.warn('Polling error:',e); }
+  },4000);
+}
+
+function cpCopiaECola(){
+  const txt=document.getElementById('pm-copiaecola-txt').textContent;
+  navigator.clipboard.writeText(txt)
+    .then(()=>{const b=document.querySelector('.pm-cb');b.textContent='✅ Copiado!';setTimeout(()=>b.textContent='📋 Copiar código PIX',2200);})
+    .catch(()=>prompt('Copie o código PIX:',txt));
+}
+
+function doPrint(){
+  closePay();
+  document.getElementById('toolbar').style.display='none';
+  setTimeout(()=>{
+    window.print();
+    setTimeout(()=>document.getElementById('toolbar').style.display='flex',1200);
+  },200);
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(document.getElementById('mbg').style.display==='flex')cm();
+    else if(document.getElementById('pay-bg').style.display==='flex')closePay();
+    else if(editMode)toggleEdit();
+  }
+});
+
+// Marcar todos os containers como sem foto no início (visíveis mas sem imagem)
+[1,2,3,4,5].forEach(n=>{
+  const pw=document.getElementById('pw'+n);
+  if(pw) pw.setAttribute('data-no-photo','1');
+});
+</script>
+</body>
+</html>
