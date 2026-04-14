@@ -9,17 +9,6 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0a0a;font-family:'DM Sans',sans-serif;min-height:100vh;color:#e0e0e0}
 
-/* SENHA */
-#owner-screen{position:fixed;inset:0;background:#0a0a0a;z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;font-family:'Montserrat',sans-serif}
-#owner-screen h2{color:#d4a843;font-size:19px;font-weight:900}
-#owner-screen p{color:#555;font-size:11px;text-align:center;max-width:260px;line-height:1.7}
-#owner-screen input{background:#181818;border:1.5px solid #2a2a2a;border-radius:6px;color:#fff;padding:10px 16px;font-size:15px;font-family:'Montserrat',sans-serif;width:220px;text-align:center;outline:none;letter-spacing:4px}
-#owner-screen input:focus{border-color:#d4a843}
-.o-btn{background:#d4a843;color:#111;border:none;border-radius:6px;padding:10px 26px;font-size:11px;font-weight:900;font-family:'Montserrat',sans-serif;cursor:pointer;letter-spacing:1px}
-.o-btn:hover{background:#f0c060}
-#owner-err{color:#e74c3c;font-size:11px;min-height:14px}
-#owner-skip{color:#333;font-size:10px;cursor:pointer;text-decoration:underline}
-
 /* TOOLBAR */
 #toolbar{position:fixed;top:0;left:0;right:0;z-index:9000;background:#0f0f0f;border-bottom:1px solid #1e1e1e;display:flex;align-items:center;flex-wrap:wrap;gap:5px;padding:7px 14px;font-family:'Montserrat',sans-serif}
 .tb-label{color:#444;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
@@ -44,8 +33,6 @@ body{background:#0a0a0a;font-family:'DM Sans',sans-serif;min-height:100vh;color:
 .cv-page.active-model{display:flex}
 
 /* COMUNS */
-.name-lock{display:none;font-size:11px;opacity:.45;margin-left:5px;cursor:default}
-body.editing .name-lock{display:inline}
 [contenteditable="true"]{outline:1px dashed rgba(212,168,67,.45);border-radius:2px;cursor:text;min-width:18px;min-height:13px}
 [contenteditable="true"]:focus{outline:2px solid #d4a843;background:rgba(212,168,67,.06)}
 .add-btns{display:none;flex-wrap:wrap;gap:5px;margin-top:7px}
@@ -54,15 +41,13 @@ body.editing .add-btns{display:flex!important}
 .rm-btn:hover{color:#e74c3c}
 body.editing .rm-btn{display:block}
 
-/* FOTO PLACEHOLDER — sempre visível para cliente, some só no print se sem foto */
+/* FOTO PLACEHOLDER */
 .foto-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;pointer-events:none;transition:opacity .2s}
 .foto-placeholder .fp-icon{font-size:22px;opacity:.5}
 .foto-placeholder .fp-txt{font-size:9px;font-weight:700;opacity:.4;letter-spacing:.5px;text-align:center;font-family:'Montserrat',sans-serif}
 .foto-placeholder .fp-sub{font-size:8px;opacity:.25;text-align:center;font-family:'Montserrat',sans-serif}
-/* Quando tem foto, esconde placeholder e mostra overlay de edição ao hover */
 [data-has-photo] .foto-placeholder{display:none}
 [data-has-photo] .po,.foto-pw:hover .po,[data-has-photo] .po2,[data-has-photo] .po3,[data-has-photo] .po4,[data-has-photo] .po5{pointer-events:auto}
-/* No print, esconde placeholder e container sem foto */
 @media print{
   .foto-placeholder{display:none!important}
   [data-no-photo="1"]{display:none!important}
@@ -332,7 +317,7 @@ body.editing .rm-btn{display:block}
 /* PRINT */
 @media print{
   *,*::before,*::after{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
-  #toolbar,#owner-screen,#pay-bg,.rm-btn,.add-btns,.name-lock{display:none!important}
+  #toolbar,#pay-bg,.rm-btn,.add-btns{display:none!important}
   [data-no-photo="1"]{display:none!important}
   body{background:transparent!important;padding:0;margin:0}
   #page-wrapper{padding:0!important}
@@ -354,15 +339,6 @@ body.editing .rm-btn{display:block}
 }
 </style>
 </head>
-
-<div id="owner-screen" style="display:none">
-  <h2>🔐 Área do Proprietário</h2>
-  <p>Digite a senha para editar o nome.<br>Clientes: clique em <strong>Continuar</strong>.</p>
-  <input type="password" id="opass" placeholder="••••" maxlength="30" onkeydown="if(event.key==='Enter')chkOwner()">
-  <div id="owner-err"></div>
-  <button class="o-btn" onclick="chkOwner()">✔ Entrar como Dono</button>
-  <span id="owner-skip" onclick="skipOwner()">Continuar como cliente</span>
-</div>
 
 <body>
 <div id="toolbar">
@@ -418,7 +394,7 @@ body.editing .rm-btn{display:block}
   </div>
   <div class="R">
     <div class="ch"><div class="chd">⚙</div>
-      <div style="display:flex;align-items:baseline;gap:6px"><div class="cn" id="n1" contenteditable="false">Nome Completo</div><span class="name-lock">🔒</span></div>
+      <div style="display:flex;align-items:baseline;gap:6px"><div class="cn" id="n1" contenteditable="false">Nome Completo</div></div>
       <div class="cr" contenteditable="false">Cargo · Especialidade · Área</div>
     </div>
     <div class="ct">
@@ -454,7 +430,7 @@ body.editing .rm-btn{display:block}
     </div>
     <input type="file" id="pi2" accept="image/*" onchange="lp(event,2)" style="display:none">
     <div class="hi">
-      <div style="display:flex;align-items:baseline;gap:7px"><div class="cn2" id="n2" contenteditable="false">Nome Completo</div><span class="name-lock" style="color:#d4a843">🔒</span></div>
+      <div style="display:flex;align-items:baseline;gap:7px"><div class="cn2" id="n2" contenteditable="false">Nome Completo</div></div>
       <div class="cr2" contenteditable="false">Cargo · Especialidade · Área</div>
       <div class="cc2">
         <div class="cci"><span class="ic">📞</span><span contenteditable="false">(31) 99999-0000</span></div>
@@ -511,7 +487,7 @@ body.editing .rm-btn{display:block}
     </div>
     <input type="file" id="pi3" accept="image/*" onchange="lp(event,3)" style="display:none">
     <div class="hi3">
-      <div style="display:flex;align-items:baseline;gap:7px"><div class="cn3" id="n3" contenteditable="false">Nome Completo</div><span class="name-lock" style="color:#aaa">🔒</span></div>
+      <div style="display:flex;align-items:baseline;gap:7px"><div class="cn3" id="n3" contenteditable="false">Nome Completo</div></div>
       <div class="cr3" contenteditable="false">Cargo · Especialidade · Área</div>
       <div class="cc3">
         <div class="cci3"><span>📞</span><span contenteditable="false">(31) 99999-0000</span></div>
@@ -572,7 +548,7 @@ body.editing .rm-btn{display:block}
     </div>
     <input type="file" id="pi4" accept="image/*" onchange="lp(event,4)" style="display:none">
     <div class="hi4">
-      <div style="display:flex;align-items:baseline;gap:7px"><div class="cn4" id="n4" contenteditable="false">Nome Completo</div><span class="name-lock" style="color:#c9a84c">🔒</span></div>
+      <div style="display:flex;align-items:baseline;gap:7px"><div class="cn4" id="n4" contenteditable="false">Nome Completo</div></div>
       <div class="cr4" contenteditable="false">Cargo · Especialidade · Área</div>
       <div class="cc4">
         <div class="cci4"><span class="ic">📞</span><span contenteditable="false">(31) 99999-0000</span></div>
@@ -630,7 +606,7 @@ body.editing .rm-btn{display:block}
     </div>
     <input type="file" id="pi5" accept="image/*" onchange="lp(event,5)" style="display:none">
     <div class="hi5">
-      <div style="display:flex;align-items:baseline;gap:7px"><div class="cn5" id="n5" contenteditable="false">Nome Completo</div><span class="name-lock" style="color:#c9a84c">🔒</span></div>
+      <div style="display:flex;align-items:baseline;gap:7px"><div class="cn5" id="n5" contenteditable="false">Nome Completo</div></div>
       <div class="cr5" contenteditable="false">Cargo · Especialidade · Área</div>
       <div class="cc5">
         <div class="cci5"><span class="ic">📞</span><span contenteditable="false">(31) 99999-0000</span></div>
@@ -711,8 +687,6 @@ body.editing .rm-btn{display:block}
       <input type="number" id="pm-cv" placeholder="R$ 5" min="5" oninput="clearV()">
     </div>
     <div class="pm-warn" id="pm-w"></div>
-
-    <!-- QR CODE PIX gerado pelo EFÍ Bank -->
     <div id="pm-qr-area">
       <p style="color:#555;font-size:10px;margin-bottom:8px">Escaneie o QR Code com seu banco:</p>
       <div class="qr-box">
@@ -727,7 +701,6 @@ body.editing .rm-btn{display:block}
         ⏳ Aguardando confirmação do pagamento...
       </div>
     </div>
-
     <div class="pm-actions">
       <button class="pm-pay" id="pm-pp" onclick="gerarPixEfi()">💛 Gerar PIX</button>
       <button class="pm-print" id="pm-pr" onclick="doPrint()">✅ Baixar PDF</button>
@@ -737,23 +710,10 @@ body.editing .rm-btn{display:block}
 </div>
 
 <script>
-// ══════════════════════════════════════════════════════════
-// CONFIGURAÇÕES — PREENCHA COM SEUS DADOS
-// ══════════════════════════════════════════════════════════
-const OWNER_PASS = '1234'; // Senha do proprietário para editar o nome
-
-// URL do Cloudflare Worker — token fica protegido no servidor
 const WORKER_URL = 'https://curriculo-pix.carvalhodon88.workers.dev';
-// ══════════════════════════════════════════════════════════
 
-let editMode=false,isOwner=false,curType=null,curM=null,selVal=null,activeM=1;
+let editMode=false,curType=null,curM=null,selVal=null,activeM=1;
 let paymentId=null,pollInterval=null;
-
-function chkOwner(){
-  if(document.getElementById('opass').value===OWNER_PASS){isOwner=true;document.getElementById('owner-screen').style.display='none';}
-  else{document.getElementById('owner-err').textContent='❌ Senha incorreta.';document.getElementById('opass').value='';setTimeout(()=>document.getElementById('owner-err').textContent='',2000);}
-}
-function skipOwner(){document.getElementById('owner-screen').style.display='none';}
 
 function swM(n,btn){
   document.querySelectorAll('.cv-page').forEach(el=>el.classList.toggle('active-model',el.id==='cv'+n));
@@ -765,8 +725,7 @@ function swM(n,btn){
 function applyEd(on){
   const cv=document.getElementById('cv'+activeM);if(!cv)return;
   cv.querySelectorAll('[contenteditable]').forEach(el=>{
-    const nm=el.id&&el.id.startsWith('n');
-    el.setAttribute('contenteditable',on&&(isOwner||!nm)?'true':'false');
+    el.setAttribute('contenteditable',on?'true':'false');
   });
   cv.querySelectorAll('.rm-btn').forEach(b=>b.style.display=on?'block':'none');
 }
@@ -792,47 +751,31 @@ function tp(n){
 }
 
 function showPhotoMenu(n,img){
-  // Remove menu anterior se existir
   const old=document.getElementById('photo-menu');
   if(old) old.remove();
-
   const menu=document.createElement('div');
   menu.id='photo-menu';
-  menu.style.cssText='position:fixed;z-index:99990;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:4px;font-family:Montserrat,sans-serif;box-shadow:0 8px 32px rgba(0,0,0,.8)';
-
-  // Posicionar no centro da tela
-  menu.style.top='50%';
-  menu.style.left='50%';
-  menu.style.transform='translate(-50%,-50%)';
-
+  menu.style.cssText='position:fixed;z-index:99990;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:4px;font-family:Montserrat,sans-serif;box-shadow:0 8px 32px rgba(0,0,0,.8);top:50%;left:50%;transform:translate(-50%,-50%)';
   const btnTroca=document.createElement('button');
   btnTroca.textContent='📷 Trocar foto';
   btnTroca.style.cssText='background:#222;color:#d4a843;border:none;border-radius:5px;padding:9px 18px;font-size:11px;font-weight:700;cursor:pointer;font-family:Montserrat,sans-serif;text-align:left';
   btnTroca.onmouseenter=()=>btnTroca.style.background='#333';
   btnTroca.onmouseleave=()=>btnTroca.style.background='#222';
   btnTroca.onclick=()=>{menu.remove();bgOverlay.remove();document.getElementById('pi'+n).click();};
-
   const btnDel=document.createElement('button');
   btnDel.textContent='🗑 Remover foto';
   btnDel.style.cssText='background:#222;color:#e74c3c;border:none;border-radius:5px;padding:9px 18px;font-size:11px;font-weight:700;cursor:pointer;font-family:Montserrat,sans-serif;text-align:left';
   btnDel.onmouseenter=()=>btnDel.style.background='#333';
   btnDel.onmouseleave=()=>btnDel.style.background='#222';
   btnDel.onclick=()=>{removePhoto(n);menu.remove();bgOverlay.remove();};
-
   const btnCancel=document.createElement('button');
   btnCancel.textContent='✕ Cancelar';
   btnCancel.style.cssText='background:none;color:#555;border:none;border-radius:5px;padding:7px 18px;font-size:10px;cursor:pointer;font-family:Montserrat,sans-serif;text-align:left';
   btnCancel.onclick=()=>{menu.remove();bgOverlay.remove();};
-
-  menu.appendChild(btnTroca);
-  menu.appendChild(btnDel);
-  menu.appendChild(btnCancel);
-
-  // Overlay escuro atrás
+  menu.appendChild(btnTroca);menu.appendChild(btnDel);menu.appendChild(btnCancel);
   const bgOverlay=document.createElement('div');
   bgOverlay.style.cssText='position:fixed;inset:0;z-index:99989;background:rgba(0,0,0,.5)';
   bgOverlay.onclick=()=>{menu.remove();bgOverlay.remove();};
-
   document.body.appendChild(bgOverlay);
   document.body.appendChild(menu);
 }
@@ -840,41 +783,32 @@ function showPhotoMenu(n,img){
 function removePhoto(n){
   const img=document.getElementById('ph'+n);
   if(!img) return;
-  img.src='';
-  img.style.display='none';
+  img.src='';img.style.display='none';
   img.removeAttribute('data-has-photo');
   const pw=document.getElementById('pw'+n);
   if(pw) pw.removeAttribute('data-has-photo');
-  updatePhotoContainer(n, false);
+  updatePhotoContainer(n,false);
   const inp=document.getElementById('pi'+n);
   if(inp) inp.value='';
 }
 
-function updatePhotoContainer(n, hasPhoto){
+function updatePhotoContainer(n,hasPhoto){
   const pw=document.getElementById('pw'+n);
   if(!pw) return;
-  // Container sempre visível para o cliente interagir
-  // data-no-photo só serve para esconder no print via CSS
-  if(hasPhoto){
-    pw.removeAttribute('data-no-photo');
-  } else {
-    pw.setAttribute('data-no-photo','1');
-  }
+  if(hasPhoto){pw.removeAttribute('data-no-photo');}
+  else{pw.setAttribute('data-no-photo','1');}
 }
 
 function lp(e,n){
-  const f=e.target.files[0];
-  if(!f) return;
+  const f=e.target.files[0];if(!f)return;
   const r=new FileReader();
   r.onload=ev=>{
     const img=document.getElementById('ph'+n);
-    img.src=ev.target.result;
-    img.style.display='block';
-    // Marcar o container como "tem foto" para esconder placeholder e mostrar overlay
+    img.src=ev.target.result;img.style.display='block';
     const pw=document.getElementById('pw'+n);
     if(pw) pw.setAttribute('data-has-photo','1');
     img.setAttribute('data-has-photo','1');
-    updatePhotoContainer(n, true);
+    updatePhotoContainer(n,true);
   };
   r.readAsDataURL(f);
 }
@@ -901,7 +835,6 @@ function confM(){
   if(!v1){alert('Preencha o primeiro campo.');return;}
   const m=curM;const ed=editMode;
   const mk=`contenteditable="${ed}"`;
-
   if(curType==='job'){
     const list=document.getElementById('jl'+m);
     const div=document.createElement('div');div.style.position='relative';
@@ -910,7 +843,6 @@ function confM(){
       div.innerHTML=`<button class="rm-btn" style="top:0;right:0" onclick="rmJ(this)">✕</button><div class="jh2"><div class="jco2" ${mk}>${v1}</div><div class="jpe2" ${mk}>${v3||'Período'}</div></div><div class="jro2" ${mk}>${v2||'Cargo'}</div>`;
     }else{
       const p=m==='1'?'':m==='3'?'3':m==='4'?'4':'5';
-      const cls=`jb${p||''}`;
       div.className=p?'jb'+p:'job';
       const rc=m==='5'?';color:#2a2a2a':'';
       div.innerHTML=`<button class="rm-btn" style="top:6px;right:0${rc}" onclick="rmJ(this)">✕</button><div class="jco${p}" ${mk}>${v1}</div><div class="jro${p}" ${mk}>${v2||'Cargo'}</div><div class="jpe${p}" ${mk}>${v3||'Período'}</div>`;
@@ -919,14 +851,13 @@ function confM(){
   }else if(curType==='proj'){
     const list=document.getElementById('pl'+m);
     const div=document.createElement('div');div.style.position='relative';
-    const p=m==='1'?'':m;
     const cls=m==='1'?'prj':m==='2'?'pr2':m==='3'?'pr3':m==='4'?'pr4':'pr5';
     const nc=m==='1'?'pjn':m==='2'?'pn2':m==='3'?'pn3':m==='4'?'pn4':'pn5';
     const dc=m==='1'?'pjd':m==='2'?'pd2':m==='3'?'pd3':m==='4'?'pd4':'pd5';
     const lc=m==='1'?'pjl':m==='2'?'pl2':m==='3'?'pl3':m==='4'?'pl4':'pl5';
     const rmst=m==='1'?'top:6px;right:0':m==='2'?'top:0;right:0':'top:6px;right:6px';
     const rmcl=m==='5'?';color:#2a2a2a':'';
-    const la=m==='1'?`<a href="${v3}" target="_blank">${v3}</a>`:m==='3'?`<a href="${v3}" target="_blank">${v3}</a>`:m==='5'?`<a href="${v3}" target="_blank">${v3}</a>`:m==='4'?`<a href="${v3}" target="_blank">${v3}</a>`:m==='2'?`<a href="${v3}" target="_blank">${v3}</a>`:'';
+    const la=`<a href="${v3}" target="_blank">${v3}</a>`;
     div.className=cls;
     div.innerHTML=`<button class="rm-btn" style="${rmst}${rmcl}" onclick="rmP(this)">✕</button><div class="${nc}" ${mk}>${v1}</div><div class="${dc}" ${mk}>${v2}</div>${v3?`<div class="${lc}">${la}</div>`:''}`;
     list.appendChild(div);
@@ -958,7 +889,7 @@ function openPay(){
   document.getElementById('pm-pp').innerHTML='💛 Gerar PIX';
   document.getElementById('pm-pr').style.display='none';
   setStatus('','');
-  selVal=null; paymentId=null;
+  selVal=null;paymentId=null;
   if(pollInterval){clearInterval(pollInterval);pollInterval=null;}
 }
 
@@ -969,7 +900,7 @@ function closePay(){
 
 function selV(btn,v){
   document.querySelectorAll('.pm-vbtn').forEach(b=>b.classList.remove('sel'));
-  btn.classList.add('sel'); selVal=v;
+  btn.classList.add('sel');selVal=v;
   document.getElementById('pm-cv').value='';
   document.getElementById('pm-w').textContent='';
 }
@@ -981,8 +912,7 @@ function clearV(){
 
 function setStatus(msg,tipo){
   const el=document.getElementById('pm-status-msg');
-  el.textContent=msg;
-  el.className='pm-status';
+  el.textContent=msg;el.className='pm-status';
   if(tipo) el.classList.add(tipo);
   el.style.display=msg?'block':'none';
 }
@@ -992,20 +922,12 @@ async function gerarPixEfi(){
   const val=selVal||cv;
   if(!val||val<5){document.getElementById('pm-w').textContent='⚠ Valor mínimo: R$ 5,00';return;}
   document.getElementById('pm-w').textContent='';
-
   const btn=document.getElementById('pm-pp');
-  btn.disabled=true;
-  btn.innerHTML='<span class="pm-spin"></span> Gerando PIX...';
-
+  btn.disabled=true;btn.innerHTML='<span class="pm-spin"></span> Gerando PIX...';
   try{
-    const res=await fetch(WORKER_URL+'/criar-pix',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({valor: val})
-    });
+    const res=await fetch(WORKER_URL+'/criar-pix',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({valor:val})});
     const data=await res.json();
     if(!res.ok) throw new Error(data.erro||'Erro ao gerar PIX');
-
     paymentId=data.txid;
     document.getElementById('pm-qr-img').src=data.imagemQrcode;
     document.getElementById('pm-copiaecola-txt').textContent=data.qrcode;
@@ -1014,12 +936,10 @@ async function gerarPixEfi(){
     document.getElementById('pm-status-msg').style.display='block';
     btn.innerHTML='🔄 Aguardando pagamento...';
     iniciarPolling();
-
   }catch(e){
     console.error(e);
     document.getElementById('pm-w').textContent='❌ '+e.message;
-    btn.disabled=false;
-    btn.innerHTML='💛 Tentar novamente';
+    btn.disabled=false;btn.innerHTML='💛 Tentar novamente';
   }
 }
 
@@ -1027,26 +947,21 @@ function iniciarPolling(){
   if(pollInterval) clearInterval(pollInterval);
   pollInterval=setInterval(async()=>{
     try{
-      const res=await fetch(WORKER_URL+'/status-pix',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({txid: paymentId})
-      });
+      const res=await fetch(WORKER_URL+'/status-pix',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({txid:paymentId})});
       if(!res.ok) return;
       const data=await res.json();
-
       if(data.status==='CONCLUIDA'){
-        clearInterval(pollInterval); pollInterval=null;
+        clearInterval(pollInterval);pollInterval=null;
         setStatus('✅ Pagamento confirmado! Clique em Baixar PDF.','confirmado');
         document.getElementById('pm-pp').style.display='none';
         document.getElementById('pm-pr').style.display='inline-block';
-      } else if(data.status&&data.status.startsWith('REMOVIDA')){
-        clearInterval(pollInterval); pollInterval=null;
+      }else if(data.status&&data.status.startsWith('REMOVIDA')){
+        clearInterval(pollInterval);pollInterval=null;
         setStatus('❌ Pagamento não concluído. Tente novamente.','erro');
         const btn=document.getElementById('pm-pp');
-        btn.disabled=false; btn.innerHTML='💛 Gerar novo PIX';
+        btn.disabled=false;btn.innerHTML='💛 Gerar novo PIX';
       }
-    }catch(e){ console.warn('Polling error:',e); }
+    }catch(e){console.warn('Polling error:',e);}
   },4000);
 }
 
@@ -1065,6 +980,7 @@ function doPrint(){
     setTimeout(()=>document.getElementById('toolbar').style.display='flex',1200);
   },200);
 }
+
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     if(document.getElementById('mbg').style.display==='flex')cm();
@@ -1073,7 +989,6 @@ document.addEventListener('keydown',e=>{
   }
 });
 
-// Marcar todos os containers como sem foto no início (visíveis mas sem imagem)
 [1,2,3,4,5].forEach(n=>{
   const pw=document.getElementById('pw'+n);
   if(pw) pw.setAttribute('data-no-photo','1');
